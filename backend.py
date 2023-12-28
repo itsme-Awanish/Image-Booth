@@ -25,11 +25,14 @@ def analyse_face(img_list):
                 face = faces[face_key]
                 facial_area = img[face['facial_area'][1]:face['facial_area'][3], face['facial_area'][0]:face['facial_area'][2]]
                 result = DeepFace.analyze(facial_area, actions=['gender', 'emotion', 'race'], enforce_detection=False)
-                result[0]['image_path'] = img_path #adding the file path to the result
-                result[0]['face_key'] = face_key
-                results.append(result[0])
+                temp = {}
+                temp['image_path'] = img_path #adding the file path to the result
+                temp['face_key'] = face_key
+                temp['dominant_emotion'] = result[0]['dominant_emotion'].lower()
+                temp['dominant_gender']= result[0]['dominant_gender'].lower()
+                temp['dominant_race']= result[0]['dominant_race'].lower()
+                results.append(temp)
         except:
-            result[0]['face_key'] = 'no face detected'
             continue
     df = pd.DataFrame(results)
     return df
